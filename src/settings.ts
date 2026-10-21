@@ -3,6 +3,7 @@ import { fillAccountSetting } from './license/github-obsidian';
 import { PRO_UI, isPro } from './pro';
 import { validateAction, type Action } from './edit';
 import type BasesMultiEditPlugin from './main';
+import { helloSettingItems } from './hello/settings';
 export interface BulkSettings { actions: Action[] }
 export function normalizeSettings(value: unknown): BulkSettings {
 	const actions: Action[] = [];
@@ -18,6 +19,11 @@ export function normalizeSettings(value: unknown): BulkSettings {
 export class BulkSettingsTab extends PluginSettingTab {
 	constructor(app: App, private readonly plugin: BasesMultiEditPlugin) { super(app, plugin); }
 	getSettingDefinitions(): SettingDefinitionItem[] {
+		// The product rows, then the "More from NoteMods" card (packages/hello).
+		return [...this.productSettingDefinitions(), ...helloSettingItems()];
+	}
+
+	productSettingDefinitions(): SettingDefinitionItem[] {
 		return [
 			{ name: 'Bulk editing', desc: 'Choose Multi-row edit in the Bases view menu. Select rows, preview a property change, then apply. Undo is available for this session.' },
 			{ name: 'Get pro', desc: isPro() ? 'Pro is active.' : `${PRO_UI.proSummary} `, render: setting => { if (!isPro()) setting.descEl.createEl('a', { text: 'Pro: $15 one time or $5 a month', href: 'https://github.com/sponsors/theluckystrike/sponsorships?tier_id=666162&metadata_source=bases-multi-edit' }); } },

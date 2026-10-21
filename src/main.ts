@@ -5,6 +5,8 @@ import { bindPro, isPro, SPONSORS } from './pro';
 import { EditView, VIEW_ID } from './view';
 import { BulkSettingsTab, normalizeSettings, type BulkSettings } from './settings';
 import { applyChanges, type Action, type Change, type Store } from './edit';
+import { setupHello } from './hello/index';
+import WHATS_NEW from './whats-new.json';
 
 export interface Batch { property: string; changes: Change[] }
 export default class BasesMultiEditPlugin extends Plugin {
@@ -16,6 +18,8 @@ export default class BasesMultiEditPlugin extends Plugin {
 	readonly dialogs = new Set<Modal>();
 	readonly generation = `${Date.now()}-${Math.random()}`;
 	async onload(): Promise<void> {
+		// First: "What's new" reads its state before the settings load (packages/hello). It does not wait.
+		setupHello(this, WHATS_NEW);
 		this.stopped = false;
 		this.settings = normalizeSettings(await this.loadData());
 		const pro = createGitHubSponsors(this.app, this.manifest.id, SPONSORS, this);

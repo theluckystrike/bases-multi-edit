@@ -4,7 +4,7 @@ Change one property across selected rows in a Bases table. See each note's old a
 
 <img src="https://raw.githubusercontent.com/theluckystrike/bases-multi-edit/HEAD/docs/selection.png" alt="Project review table with two selected rows" width="720">
 
-The free tier includes all edit operations, preview, and undo for the last batch. Pro adds saved bulk actions and 20 session undo batches for $15 one time or $5 a month. [Get Pro](https://github.com/sponsors/theluckystrike?metadata_source=bases-multi-edit) or choose the [$15 one-time offer](https://github.com/sponsors/theluckystrike/sponsorships?tier_id=666162&metadata_source=bases-multi-edit).
+Pro adds saved bulk actions and 20 session undo batches for $15 one time or $5 a month. [Get Pro](https://github.com/sponsors/theluckystrike?metadata_source=bases-multi-edit) or choose the [$15 one-time offer](https://github.com/sponsors/theluckystrike/sponsorships?tier_id=666162&metadata_source=bases-multi-edit).
 
 A project review often ends with the same update on several notes. Mark projects done, add a review tag, or clear an old owner property. Selection stays beside the values you review, without a selection property in your notes.
 
@@ -56,7 +56,7 @@ Pro also keeps up to 20 undo batches during the current plugin session. Undo wor
 
 ## Install
 
-Requires Obsidian 1.13.4 or newer with the core Bases plugin enabled. When this product is listed in Community plugins, search for Bases Multi-Row Edit, install it, and enable it.
+Requires Obsidian 1.13.4 or newer with the core Bases plugin enabled. Search for Bases Multi-Row Edit in Community plugins, install it, and enable it.
 
 For manual installation, put `main.js`, `manifest.json`, and `styles.css` from a release into `<vault>/.obsidian/plugins/bases-multi-edit/`. Reload community plugins and enable the product. It uses core APIs and supports desktop and mobile layouts. The screenshots show desktop Obsidian.
 
@@ -73,7 +73,9 @@ For example, set property `status`, operation Set value, type Text, and value `d
 
 ## Settings
 
-The settings tab explains how to open the editing view, shows the optional Pro offer, and provides the shared GitHub Sponsors account controls. Sign in only if you want the paid conveniences. Clear saved actions deletes saved action definitions without changing any note.
+After a minor or major update, this plugin opens one What's new tab in the background. The tab and settings card suggest other NoteMods plugins and Zovo Chat and link to notemods.com for feedback ([privacy](https://notemods.com/privacy/)). The tab sends no data. Turn the tab off in Settings.
+
+The settings tab explains how to open the editing view, shows the optional Pro offer, and provides the shared GitHub Sponsors account controls. Sign in only if you want the paid conveniences.
 
 The command palette also provides Undo the last bulk edit when a batch is available. You can assign a hotkey in Obsidian's Hotkeys settings. No hotkeys are assigned by default.
 
