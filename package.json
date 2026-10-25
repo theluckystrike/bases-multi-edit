@@ -1,5 +1,6 @@
 {
 	"name": "bases-multi-edit",
+	"repository": {"type": "git", "url": "theluckystrike/bases-multi-edit.git"},
 	"version": "1.3.0",
 	"private": true,
 	"description": "Set, append or remove a property on selected Bases rows with preview and undo.",
