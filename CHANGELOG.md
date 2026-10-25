@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0
+
+### Minor Changes
+
+- 6e98daf: Add Replace list items. It renames one list item in place on the selected notes and keeps the other items. For tags, matching ignores a leading # and letter case. Apply now skips a note when Obsidian has seen a change to its file after the preview, for example from sync, and names the note in the result. A later change to other properties or the body is kept.
+
 ## 1.2.0
 
 ### Minor Changes

@@ -34,6 +34,13 @@
     "after": "(async()=>{[...document.querySelectorAll('.bme-toolbar button')].find(e=>e.textContent==='Undo last batch')?.click();await new Promise(r=>setTimeout(r,700));return 'restored append';})()"
   },
   {
+    "feature": "replace",
+    "caption": "Replace one tag with another tag in place on the selected rows.",
+    "note": "Review.base",
+    "eval": "(async()=>{for(const dialog of app.plugins.plugins['bases-multi-edit'].dialogs)dialog.close(); app.setting.close();for(let i=0;i<50&&!document.querySelector('.bme-table-view tbody input');i++)await new Promise(r=>setTimeout(r,100));const root=document.querySelector('.bme-table-view');if(!root)throw Error('Table missing');[...root.querySelectorAll('button')].find(e=>e.textContent==='Select visible')?.click();await new Promise(r=>setTimeout(r,200));[...document.querySelector('.bme-table-view').querySelectorAll('button')].find(e=>e.textContent==='Edit selected')?.click();await new Promise(r=>setTimeout(r,300));for(const [name,value] of Object.entries({Property:'tags',Operation:'replace-items','Value type':'list','Find items':'[\"project\"]',Value:'[\"area\"]'})){const row=[...document.querySelectorAll('.modal .setting-item')].find(e=>e.querySelector('.setting-item-name')?.textContent===name);const el=row?.querySelector('input,select,textarea');if(!el)throw Error('Missing control '+name);el.value=value;el.dispatchEvent(new Event(el.tagName==='SELECT'?'change':'input',{bubbles:true}));}[...document.querySelectorAll('.modal button')].find(e=>e.textContent==='Preview changes')?.click();await new Promise(r=>setTimeout(r,500));const text=document.querySelector('.bme-preview pre')?.textContent??'';if(!text.includes('\"project\" → \"area\"')||!text.includes('[\"project\"] → [\"area\"]'))throw Error('Missing replace preview');document.querySelector('.bme-preview pre').scrollIntoView({block:'end'});await new Promise(r=>setTimeout(r,200));return 'replace PASS';})()",
+    "wait": 800
+  },
+  {
     "feature": "settings",
     "caption": "Optional GitHub Sponsors sign in and local saved actions.",
     "eval": "for(const dialog of app.plugins.plugins['bases-multi-edit'].dialogs)dialog.close(); app.setting.close();app.setting.open(); app.setting.openTabById('bases-multi-edit');",

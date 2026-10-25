@@ -5,13 +5,17 @@ import { validateAction, type Action } from './edit';
 import type BasesMultiEditPlugin from './main';
 import { helloSettingItems } from './hello/settings';
 export interface BulkSettings { actions: Action[] }
+/** Find items belongs only to Replace list items. */
+export function savedAction(a: Action): Action {
+	return typeof a.find === 'string' && a.operation === 'replace-items' ? { property: a.property, operation: a.operation, type: a.type, input: a.input, find: a.find } : { property: a.property, operation: a.operation, type: a.type, input: a.input };
+}
 export function normalizeSettings(value: unknown): BulkSettings {
 	const actions: Action[] = [];
 	if (value && typeof value === 'object' && 'actions' in value && Array.isArray(value.actions)) {
 		for (const item of value.actions.slice(-50) as unknown[]) {
 			if (!item || typeof item !== 'object') continue;
 			const a = item as Action;
-			try { if (typeof a.property !== 'string' || typeof a.input !== 'string') continue; validateAction(a); actions.push({ property: a.property, operation: a.operation, type: a.type, input: a.input }); } catch { /* Ignore invalid saved data. */ }
+			try { if (typeof a.property !== 'string' || typeof a.input !== 'string') continue; validateAction(a); actions.push(savedAction(a)); } catch { /* Ignore invalid saved data. */ }
 		}
 	}
 	return { actions };

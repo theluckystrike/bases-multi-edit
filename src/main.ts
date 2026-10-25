@@ -3,8 +3,8 @@ import { createGitHubSponsors } from './license/github-obsidian';
 import type { SponsorsManager } from './license/index';
 import { bindPro, isPro, SPONSORS } from './pro';
 import { EditView, VIEW_ID } from './view';
-import { BulkSettingsTab, normalizeSettings, type BulkSettings } from './settings';
-import { applyChanges, type Action, type Change, type Store } from './edit';
+import { BulkSettingsTab, normalizeSettings, savedAction, type BulkSettings } from './settings';
+import { applyChanges, type Action, type Change, type Stamp, type Store } from './edit';
 import { setupHello } from './hello/index';
 import WHATS_NEW from './whats-new.json';
 
@@ -50,7 +50,12 @@ export default class BasesMultiEditPlugin extends Plugin {
 			await leaf.setViewState(state);
 		}
 	}
-	store(): Store { return { update: async (path, callback) => {
+	/** File state from the vault index, read before the preview and again before each write. */
+	stamp(path: string): Stamp | null {
+		const file = this.app.vault.getFileByPath(path);
+		return file ? { mtime: file.stat.mtime, size: file.stat.size } : null;
+	}
+	store(): Store { return { stamp: path => this.stamp(path), update: async (path, callback) => {
 		if (this.stopped) throw new Error('The plugin was unloaded.');
 		const file = this.app.vault.getFileByPath(path);
 		if (!file || file.extension !== 'md') throw new Error('Markdown note no longer exists');
@@ -65,7 +70,9 @@ export default class BasesMultiEditPlugin extends Plugin {
 				this.history.push({ property: action.property, changes: result.completed });
 				this.history = this.history.slice(isPro() ? -20 : -1);
 			}
-			return `${result.completed.length} ${result.completed.length === 1 ? 'note' : 'notes'} changed. ${result.skipped.length} skipped.\n${result.skipped.join('\n')}`;
+			// Free keeps one batch: a new apply for the skipped notes replaces it.
+			const hint = result.skipped.length && !isPro() ? '\nUndo the batch first if you need it.' : '';
+			return `${result.completed.length} ${result.completed.length === 1 ? 'note' : 'notes'} changed. ${result.skipped.length} skipped.\n${result.skipped.join('\n')}${hint}`;
 		} finally { this.busy = false; }
 	}
 	async undo(): Promise<string> {
@@ -83,8 +90,8 @@ export default class BasesMultiEditPlugin extends Plugin {
 	}
 	async saveAction(action: Action): Promise<void> {
 		if (!isPro()) throw new Error('Saved actions require Pro.');
-		const key = JSON.stringify(action);
-		this.settings.actions = [...this.settings.actions.filter(a => JSON.stringify(a) !== key), { ...action }].slice(-50);
+		const saved = savedAction(action), key = JSON.stringify(saved);
+		this.settings.actions = [...this.settings.actions.filter(a => JSON.stringify(a) !== key), saved].slice(-50);
 		await this.saveData(this.settings);
 	}
 	async openNote(file: TFile): Promise<void> { await this.app.workspace.openLinkText(file.path, '', false); }

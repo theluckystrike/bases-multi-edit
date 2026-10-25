@@ -317,6 +317,564 @@
      "review"
     ]
    }
+  },
+  {
+   "name": "replace one item in place",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "a",
+      "b",
+      "c"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"x\"]",
+     "find": "[\"b\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "a",
+     "x",
+     "c"
+    ]
+   }
+  },
+  {
+   "name": "replace two found items with one",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "a",
+      "b",
+      "c"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"x\"]",
+     "find": "[\"a\", \"c\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "x",
+     "b"
+    ]
+   }
+  },
+  {
+   "name": "replace keeps no duplicate",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "draft",
+      "review",
+      "done"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"done\"]",
+     "find": "[\"draft\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "review",
+     "done"
+    ]
+   }
+  },
+  {
+   "name": "replace no match",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "a",
+      "b"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"x\"]",
+     "find": "[\"z\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "a",
+     "b"
+    ]
+   }
+  },
+  {
+   "name": "replace absent",
+   "args": [
+    {
+     "exists": false
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"x\"]",
+     "find": "[\"a\"]"
+    }
+   ],
+   "expected": {
+    "exists": false
+   }
+  },
+  {
+   "name": "replace null",
+   "args": [
+    {
+     "exists": true,
+     "value": null
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"x\"]",
+     "find": "[\"a\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": null
+   }
+  },
+  {
+   "name": "replace scalar",
+   "args": [
+    {
+     "exists": true,
+     "value": "#project"
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"project\"]",
+     "find": "[\"#project\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": "project"
+   }
+  },
+  {
+   "name": "replace scalar with two items",
+   "args": [
+    {
+     "exists": true,
+     "value": "draft"
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"review\", \"next\"]",
+     "find": "[\"draft\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "review",
+     "next"
+    ]
+   }
+  },
+  {
+   "name": "replace one with two in place",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "a",
+      "b",
+      "c"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"x\", \"y\"]",
+     "find": "[\"b\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "a",
+     "x",
+     "y",
+     "c"
+    ]
+   }
+  },
+  {
+   "name": "replace is typed",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      1,
+      "1"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[2]",
+     "find": "[1]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     2,
+     "1"
+    ]
+   }
+  },
+  {
+   "name": "replace is case-sensitive outside tags",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "Project",
+      "project"
+     ]
+    },
+    {
+     "property": "status",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"area\"]",
+     "find": "[\"project\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "Project",
+     "area"
+    ]
+   }
+  },
+  {
+   "name": "replace keeps old duplicates of kept items",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "k",
+      "k",
+      "b"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"x\"]",
+     "find": "[\"b\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "k",
+     "k",
+     "x"
+    ]
+   }
+  },
+  {
+   "name": "replace tags ignores a leading hash",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "#draft",
+      "x"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"done\"]",
+     "find": "[\"draft\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "done",
+     "x"
+    ]
+   }
+  },
+  {
+   "name": "replace tags finds a hash form",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "draft"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"#done\"]",
+     "find": "[\"#draft\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "done"
+    ]
+   }
+  },
+  {
+   "name": "replace tags ignores letter case",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "Draft"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"final\"]",
+     "find": "[\"draft\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "final"
+    ]
+   }
+  },
+  {
+   "name": "replace tags keeps no duplicate in another form",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "draft",
+      "#Done"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"done\"]",
+     "find": "[\"draft\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "#Done"
+    ]
+   }
+  },
+  {
+   "name": "replace tags matches the Tags key spelling",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "#Draft"
+     ]
+    },
+    {
+     "property": "Tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"done\"]",
+     "find": "[\"draft\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "done"
+    ]
+   }
+  },
+  {
+   "name": "replace other list keeps exact hash",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "#draft"
+     ]
+    },
+    {
+     "property": "topics",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[\"done\"]",
+     "find": "[\"draft\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "#draft"
+    ]
+   }
+  },
+  {
+   "name": "curly quotes in Find items and Value",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "draft",
+      "x"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "replace-items",
+     "type": "list",
+     "input": "[“done”]",
+     "find": "[“draft”]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "done",
+     "x"
+    ]
+   }
+  },
+  {
+   "name": "curly quotes in an append list",
+   "args": [
+    {
+     "exists": true,
+     "value": [
+      "a"
+     ]
+    },
+    {
+     "property": "tags",
+     "operation": "append",
+     "type": "list",
+     "input": "[“review”]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "a",
+     "review"
+    ]
+   }
+  },
+  {
+   "name": "curly quotes inside a valid text item stay",
+   "args": [
+    {
+     "exists": true,
+     "value": []
+    },
+    {
+     "property": "tags",
+     "operation": "append",
+     "type": "list",
+     "input": "[\"He said “hi”\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "He said “hi”"
+    ]
+   }
+  },
+  {
+   "name": "curly quote pair inside one item stays one item",
+   "args": [
+    {
+     "exists": true,
+     "value": []
+    },
+    {
+     "property": "tags",
+     "operation": "append",
+     "type": "list",
+     "input": "[\"x”, “y\"]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "x”, “y"
+    ]
+   }
+  },
+  {
+   "name": "curly quoted list still parses",
+   "args": [
+    {
+     "exists": true,
+     "value": []
+    },
+    {
+     "property": "tags",
+     "operation": "append",
+     "type": "list",
+     "input": "[“draft”]"
+    }
+   ],
+   "expected": {
+    "exists": true,
+    "value": [
+     "draft"
+    ]
+   }
   }
  ]
 }

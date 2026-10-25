@@ -1,7 +1,7 @@
 import { BasesView, Modal, Setting, getFrontMatterInfo, parseYaml, type App, type QueryController } from 'obsidian';
 import type BasesMultiEditPlugin from './main';
 import { transform, validateAction, type Action } from './edit';
-import { previewChanges, FRONTMATTER_WARNING, VALUE_DESCRIPTION } from './preview';
+import { previewChanges, FIND_DESCRIPTION, FRONTMATTER_WARNING, VALUE_DESCRIPTION } from './preview';
 import { isPro } from './pro';
 export const VIEW_ID = 'bases-multi-edit';
 export function pruneSelection(selected: Set<string>, visible: string[]): void { const allowed = new Set(visible); for (const path of selected) if (!allowed.has(path)) selected.delete(path); }
@@ -54,11 +54,14 @@ export class EditModal extends Modal {
 		const preview = this.contentEl.createDiv({ cls: 'bme-preview' });
 		const invalidate = () => { this.revision++; preview.empty(); };
 		new Setting(this.contentEl).setName('Property').setDesc('Top-level note property only.').addText(t => t.setValue(this.action.property).onChange(v => { this.action.property = v; invalidate(); }));
-		new Setting(this.contentEl).setName('Operation').addDropdown(d => d.addOptions({ set: 'Set value', append: 'Append list items', 'remove-items': 'Remove list items', 'remove-property': 'Remove property' }).setValue(this.action.operation).onChange(v => { this.action.operation = v as Action['operation']; invalidate(); }));
+		let find: Setting | null = null;
+		new Setting(this.contentEl).setName('Operation').addDropdown(d => d.addOptions({ set: 'Set value', append: 'Append list items', 'remove-items': 'Remove list items', 'replace-items': 'Replace list items', 'remove-property': 'Remove property' }).setValue(this.action.operation).onChange(v => { this.action.operation = v as Action['operation']; find?.settingEl.toggle(v === 'replace-items'); invalidate(); }));
 		new Setting(this.contentEl).setName('Value type').addDropdown(d => d.addOptions({ text: 'Text', number: 'Number', checkbox: 'Checkbox', list: 'List (JSON)' }).setValue(this.action.type).onChange(v => { this.action.type = v as Action['type']; invalidate(); }));
+		find = new Setting(this.contentEl).setName('Find items').setDesc(FIND_DESCRIPTION).addText(t => t.setPlaceholder('["draft"]').setValue(this.action.find ?? '').onChange(v => { this.action.find = v; invalidate(); }));
+		find.settingEl.toggle(this.action.operation === 'replace-items');
 		new Setting(this.contentEl).setName('Value').setDesc(VALUE_DESCRIPTION).addTextArea(t => t.setValue(this.action.input).onChange(v => { this.action.input = v; invalidate(); }));
 		if (isPro()) {
-			new Setting(this.contentEl).setName('Saved action').addDropdown(d => { d.addOption('', 'Choose an action'); this.plugin.settings.actions.forEach((a, i) => { d.addOption(String(i), `${a.operation} ${a.property}: ${a.input}`); }); d.onChange(v => { const a = this.plugin.settings.actions[Number(v)]; if (v !== '' && a) { this.action = { ...a }; this.revision++; this.form(); } }); });
+			new Setting(this.contentEl).setName('Saved action').addDropdown(d => { d.addOption('', 'Choose an action'); this.plugin.settings.actions.forEach((a, i) => { d.addOption(String(i), `${a.operation} ${a.property}: ${a.find ? `${a.find} to ` : ''}${a.input}`); }); d.onChange(v => { const a = this.plugin.settings.actions[Number(v)]; if (v !== '' && a) { this.action = { ...a }; this.revision++; this.form(); } }); });
 			new Setting(this.contentEl).addButton(b => b.setButtonText('Save action').onClick(async () => { try { validateAction(this.action); transform({ exists: false }, this.action); await this.plugin.saveAction(this.action); preview.setText('Action saved.'); } catch (e) { preview.setText(String(e)); } }));
 		}
 		new Setting(this.contentEl).addButton(b => b.setButtonText('Preview changes').setCta().onClick(() => { void (async () => {
@@ -74,7 +77,7 @@ export class EditModal extends Modal {
 					const parsed: unknown = info.exists ? (parseYaml(info.frontmatter) ?? {}) : {};
 					if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error(`Invalid properties: ${path}`);
 					return parsed as Record<string, unknown>;
-				});
+				}, path => this.plugin.stamp(path));
 				if (revision !== this.revision) return;
 				preview.empty(); preview.createEl('p', { text: FRONTMATTER_WARNING }); preview.createEl('pre', { text: messages.join('\n\n') });
 				const apply = preview.createEl('button', { text: `Apply to ${changes.length} ${changes.length === 1 ? 'note' : 'notes'}`, cls: 'mod-cta' }); apply.disabled = !changes.length;
