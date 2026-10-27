@@ -14,6 +14,8 @@ export default class BasesMultiEditPlugin extends Plugin {
 	pro: SponsorsManager | null = null;
 	history: Batch[] = [];
 	busy = false;
+	/** True after the free undo notice showed one time in this session. */
+	undoNoticeShown = false;
 	private stopped = false;
 	readonly dialogs = new Set<Modal>();
 	readonly generation = `${Date.now()}-${Math.random()}`;
@@ -70,8 +72,11 @@ export default class BasesMultiEditPlugin extends Plugin {
 				this.history.push({ property: action.property, changes: result.completed });
 				const dropped = !isPro() && this.history.length > 1;
 				this.history = this.history.slice(isPro() ? -20 : -1);
-				// Free keeps one batch. Tell the user that the earlier batch can no longer be undone.
-				if (dropped) proNotice(UNDO_LEAD);
+				// Free keeps one batch. Tell the user one time in each session that the earlier batch can no longer be undone.
+				if (dropped && !this.undoNoticeShown) {
+					this.undoNoticeShown = true;
+					proNotice(UNDO_LEAD);
+				}
 			}
 			// Free keeps one batch: a new apply for the skipped notes replaces it.
 			const hint = result.skipped.length && !isPro() ? '\nUndo the batch first if you need it.' : '';

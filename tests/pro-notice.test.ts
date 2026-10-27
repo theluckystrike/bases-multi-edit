@@ -84,6 +84,13 @@ describe('Pro moments of Bases Multi-Row Edit', () => {
 		expect(plugin.history.map((b) => b.changes[0]!.path)).toEqual(['2.md']);
 	});
 
+	it('a free user who applies 4 batches gets the undo Pro notice one time in the session', async () => {
+		const { plugin, shown } = setup(false);
+		for (const path of ['1.md', '2.md', '3.md', '4.md']) await plugin.apply(a, [change(path)]);
+		expect(shown).toEqual([{ text: `${UNDO_LEAD} ${PITCH}Sponsor on GitHub`, buttons: 1 }]);
+		expect(plugin.history.map((b) => b.changes[0]!.path)).toEqual(['4.md']);
+	});
+
 	it('a Pro user saves the action, loads it from the picker and keeps 2 undo batches, with no Pro notice', async () => {
 		const { plugin, modal, shown } = setup(true);
 		button(modal, 'Save action')!.click();

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.2
+
+### Patch Changes
+
+- e007dc4: Without Pro, the notice that the earlier batch can no longer be undone now shows one time in each session.
+
 ## 1.3.1
 
 ### Patch Changes
