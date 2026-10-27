@@ -46,7 +46,7 @@ Replace list items renames one item and keeps the others. Enter the items to fin
 
 <img src="https://raw.githubusercontent.com/theluckystrike/bases-multi-edit/HEAD/docs/undo.png" alt="Completed batch with an undo button" width="720">
 
-Apply writes one note at a time. Before each write, it compares the file's modified time and size with the preview. A note is skipped when Obsidian has seen a change to its file after the preview, for example from sync. The result shows "File changed since preview" and the path. A later change to other properties or the body is kept. Apply also checks the target property inside the write. A test changes 500 notes in one batch and restores all of them with one undo.
+Apply writes one note at a time. Before each write, it compares the file's modified time and size with the preview. A note is skipped when Obsidian has seen a change to its file after the preview, for example from sync. The result shows "File changed since preview" and the path. A later change to other properties or the body is kept. Apply also checks the target property inside the write. A test changes 500 notes in one batch and restores them with one undo.
 
 Apply and undo re-serialize the whole frontmatter through Obsidian. YAML comments can be lost, and quoting, formatting, and key order can change. The preview shows this warning. Undo restores property values or absence, not the original YAML text. Note body text is preserved.
 
@@ -56,15 +56,15 @@ Undo restores the property when it still has the applied value, and keeps other 
 
 <img src="https://raw.githubusercontent.com/theluckystrike/bases-multi-edit/HEAD/docs/settings.png" alt="Optional Pro offer and GitHub account controls" width="720">
 
-Pro adds Save action and a saved action picker to the edit dialog. An action stores the property, operation, type, and input. It never stores a row selection. Choose the notes for each run, load the action, and preview it again. Up to 50 actions are stored locally. Clear saved actions in settings removes them all.
+Pro adds Save action and a saved action picker to the edit dialog. An action stores the property, operation, type, and input. It never stores a row selection. Choose the notes, load the action, and preview it. Up to 50 actions are stored locally. Clear saved actions in settings removes them all. Without Pro, Save action shows a Sponsor notice and saves nothing.
 
-Pro also keeps up to 20 undo batches during the current plugin session. Undo works from the newest batch backward. A batch with unresolved undo conflicts stays at the top until those entries can be restored.
+Pro also keeps up to 20 undo batches during the current plugin session. Without Pro, a new apply tells you when it drops the earlier batch. A batch with unresolved undo conflicts stays at the top until those entries can be restored.
 
 ## Install
 
 Requires Obsidian 1.13.4 or newer with the core Bases plugin enabled. Search for Bases Multi-Row Edit in Community plugins, install it, and enable it.
 
-For manual installation, put `main.js`, `manifest.json`, and `styles.css` from a release into `<vault>/.obsidian/plugins/bases-multi-edit/`. Reload community plugins and enable the product. It uses core APIs and supports desktop and mobile layouts. The screenshots show desktop Obsidian.
+For manual installation, put `main.js`, `manifest.json`, and `styles.css` from a release into `<vault>/.obsidian/plugins/bases-multi-edit/`. Reload plugins and enable it. It uses core APIs and supports desktop and mobile layouts.
 
 ## Usage
 

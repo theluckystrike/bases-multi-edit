@@ -1,7 +1,7 @@
 import { Plugin, Notice, type Modal, type TFile } from 'obsidian';
 import { createGitHubSponsors } from './license/github-obsidian';
 import type { SponsorsManager } from './license/index';
-import { bindPro, isPro, SPONSORS } from './pro';
+import { bindPro, isPro, proNotice, SPONSORS, UNDO_LEAD } from './pro';
 import { EditView, VIEW_ID } from './view';
 import { BulkSettingsTab, normalizeSettings, savedAction, type BulkSettings } from './settings';
 import { applyChanges, type Action, type Change, type Stamp, type Store } from './edit';
@@ -68,7 +68,10 @@ export default class BasesMultiEditPlugin extends Plugin {
 			const result = await applyChanges(this.store(), changes, action.property);
 			if (result.completed.length) {
 				this.history.push({ property: action.property, changes: result.completed });
+				const dropped = !isPro() && this.history.length > 1;
 				this.history = this.history.slice(isPro() ? -20 : -1);
+				// Free keeps one batch. Tell the user that the earlier batch can no longer be undone.
+				if (dropped) proNotice(UNDO_LEAD);
 			}
 			// Free keeps one batch: a new apply for the skipped notes replaces it.
 			const hint = result.skipped.length && !isPro() ? '\nUndo the batch first if you need it.' : '';

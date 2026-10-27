@@ -1,6 +1,7 @@
 // Pro through GitHub Sponsors (packages/license, github.ts). product.yaml pro: holds the same values; fx check compares them.
 // This file is the one Pro facade: every Pro check in the plugin calls isPro() or onProChange().
 import type { SponsorsConfig, SponsorsManager } from './license/index';
+import { showProNotice } from './license/github-obsidian';
 
 export const SPONSORS: SponsorsConfig = {
 	// Public client id of the seller's OAuth App (device flow on, no client secret anywhere).
@@ -34,4 +35,14 @@ export function isPro(): boolean {
 /** Calls cb after every change of the Pro state. Returns the function that removes cb. */
 export function onProChange(cb: () => void): () => void {
 	return manager ? manager.onChange(cb) : () => undefined;
+}
+
+/** Lead of the Pro notice for Save action and the saved action picker. */
+export const SAVE_LEAD = 'Saved bulk actions need Pro.';
+/** Lead of the Pro notice when a free apply drops the earlier undo batch. */
+export const UNDO_LEAD = 'Undo of more than one batch needs Pro. The earlier batch can no longer be undone.';
+
+/** Shows the shared Pro notice: the lead, then the next step for this user. A free user gets a Sponsor on GitHub button. */
+export function proNotice(lead: string): void {
+	showProNotice(manager, lead);
 }

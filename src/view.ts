@@ -2,7 +2,7 @@ import { BasesView, Modal, Setting, getFrontMatterInfo, parseYaml, type App, typ
 import type BasesMultiEditPlugin from './main';
 import { transform, validateAction, type Action } from './edit';
 import { previewChanges, FIND_DESCRIPTION, FRONTMATTER_WARNING, VALUE_DESCRIPTION } from './preview';
-import { isPro } from './pro';
+import { isPro, proNotice, SAVE_LEAD } from './pro';
 export const VIEW_ID = 'bases-multi-edit';
 export function pruneSelection(selected: Set<string>, visible: string[]): void { const allowed = new Set(visible); for (const path of selected) if (!allowed.has(path)) selected.delete(path); }
 export class EditView extends BasesView {
@@ -60,10 +60,11 @@ export class EditModal extends Modal {
 		find = new Setting(this.contentEl).setName('Find items').setDesc(FIND_DESCRIPTION).addText(t => t.setPlaceholder('["draft"]').setValue(this.action.find ?? '').onChange(v => { this.action.find = v; invalidate(); }));
 		find.settingEl.toggle(this.action.operation === 'replace-items');
 		new Setting(this.contentEl).setName('Value').setDesc(VALUE_DESCRIPTION).addTextArea(t => t.setValue(this.action.input).onChange(v => { this.action.input = v; invalidate(); }));
-		if (isPro()) {
-			new Setting(this.contentEl).setName('Saved action').addDropdown(d => { d.addOption('', 'Choose an action'); this.plugin.settings.actions.forEach((a, i) => { d.addOption(String(i), `${a.operation} ${a.property}: ${a.find ? `${a.find} to ` : ''}${a.input}`); }); d.onChange(v => { const a = this.plugin.settings.actions[Number(v)]; if (v !== '' && a) { this.action = { ...a }; this.revision++; this.form(); } }); });
-			new Setting(this.contentEl).addButton(b => b.setButtonText('Save action').onClick(async () => { try { validateAction(this.action); transform({ exists: false }, this.action); await this.plugin.saveAction(this.action); preview.setText('Action saved.'); } catch (e) { preview.setText(String(e)); } }));
+		// A free user sees Save action and, after a lapsed sponsorship, the saved actions. A select shows the Pro notice.
+		if (isPro() || this.plugin.settings.actions.length) {
+			new Setting(this.contentEl).setName('Saved action').addDropdown(d => { d.addOption('', 'Choose an action'); this.plugin.settings.actions.forEach((a, i) => { d.addOption(String(i), `${a.operation} ${a.property}: ${a.find ? `${a.find} to ` : ''}${a.input}`); }); d.onChange(v => { if (!isPro()) { d.setValue(''); proNotice(SAVE_LEAD); return; } const a = this.plugin.settings.actions[Number(v)]; if (v !== '' && a) { this.action = { ...a }; this.revision++; this.form(); } }); });
 		}
+		new Setting(this.contentEl).addButton(b => b.setButtonText('Save action').onClick(async () => { if (!isPro()) { proNotice(SAVE_LEAD); return; } try { validateAction(this.action); transform({ exists: false }, this.action); await this.plugin.saveAction(this.action); preview.setText('Action saved.'); } catch (e) { preview.setText(String(e)); } }));
 		new Setting(this.contentEl).addButton(b => b.setButtonText('Preview changes').setCta().onClick(() => { void (async () => {
 			const revision = ++this.revision;
 			preview.setText('Reading selected notes…');

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1
+
+### Patch Changes
+
+- 75a38d4: Save action now shows in the edit dialog without Pro. It shows how to get Pro, with a Sponsor on GitHub button, and saves nothing. A second apply without Pro says that the earlier batch can no longer be undone.
+
 ## 1.3.0
 
 ### Minor Changes
