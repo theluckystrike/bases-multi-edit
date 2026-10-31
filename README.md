@@ -4,7 +4,7 @@ Change one property across selected rows in a Bases table. See each note's old a
 
 <img src="https://raw.githubusercontent.com/theluckystrike/bases-multi-edit/HEAD/docs/selection.png" alt="Project review table with two selected rows" width="720">
 
-Pro adds saved bulk actions and 20 session undo batches for $15 one time or $5 a month. [Get Pro](https://github.com/sponsors/theluckystrike?metadata_source=bases-multi-edit) or choose the [$15 one-time offer](https://github.com/sponsors/theluckystrike/sponsorships?tier_id=666162&metadata_source=bases-multi-edit).
+Pro adds saved bulk actions and 20 session undo batches for $15 one time or $5 a month. [Get Pro](https://github.com/sponsors/theluckystrike?frequency=one-time&metadata_source=bases-multi-edit) or choose the [$15 one-time offer](https://github.com/sponsors/theluckystrike/sponsorships?tier_id=666162&metadata_source=bases-multi-edit).
 
 Mark projects done, add a tag to notes that already have tags, rename one tag in place, or clear an old owner property. Selection stays in the view, not in your notes.
 
@@ -107,7 +107,7 @@ Property edits are ordinary note frontmatter. Saved action definitions are in th
 
 The core features are free. Pro features need a GitHub Sponsors sponsorship of theluckystrike: $5 a month or more, or $15 once. A total payment of $15 meets the payment requirement for Pro without further payment. Sign-in and the checks below still apply. Your notes stay readable and editable with or without Pro.
 
-GitHub handles the payment. Sponsor at https://github.com/sponsors/theluckystrike. You need no account for the free features. Pro needs the GitHub account that sponsors.
+GitHub handles the payment. Sponsor at https://github.com/sponsors/theluckystrike?frequency=one-time&metadata_source=bases-multi-edit. You need no account for the free features. Pro needs the GitHub account that sponsors.
 
 Until you select "Sign in with GitHub" in the settings, Bases Multi-Row Edit makes no network requests. Sign in uses the GitHub device flow. Bases Multi-Row Edit sends its public client ID and the scope `read:user` to `https://github.com/login/device/code` and shows you a code. While you enter the code at https://github.com/login/device, it asks `https://github.com/login/oauth/access_token` every few seconds to check the sign-in status. The scope permits profile reads only. GitHub needs this access to show the sponsorship tier. It grants no repository scope and no write access.
 
