@@ -8,7 +8,7 @@ import { bindPro } from '../src/pro';
 
 // A free user can select Save action in the edit dialog. The select shows the shared Pro notice with the
 // "Sponsor on GitHub" button and saves nothing. A free apply that drops the earlier undo batch says so with the same notice.
-const PITCH = 'Sponsor on GitHub, then sign in from the plugin settings.';
+const PITCH = 'One payment turns on Pro in every NoteMods plugin. Sponsor on GitHub, then sign in from the plugin settings.';
 const SAVE_LEAD = 'Saved bulk actions need Pro.';
 const UNDO_LEAD = 'Undo of more than one batch needs Pro. The earlier batch can no longer be undone.';
 const a: Action = { property: 'status', operation: 'set', type: 'text', input: 'done' };

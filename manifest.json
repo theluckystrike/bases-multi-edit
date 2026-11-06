@@ -1,9 +1,9 @@
 {
 	"id": "bases-multi-edit",
 	"name": "Bases Multi-Row Edit",
-	"version": "1.3.2",
+	"version": "1.3.3",
 	"minAppVersion": "1.13.4",
-	"description": "Set, append or remove a property on selected Bases rows with preview and undo.",
+	"description": "Bulk edit properties of selected rows in a Bases table. Set, append or remove a property in multiple notes in one batch, with a preview and undo.",
 	"author": "Michael Lip",
 	"authorUrl": "https://github.com/theluckystrike",
 	"fundingUrl": "https://github.com/sponsors/theluckystrike",
